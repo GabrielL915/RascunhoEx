@@ -1,4 +1,4 @@
-# Spec: saveExcalidraw — salvar e compartilhar diagramas Excalidraw
+# Spec: RascunhoEx — salvar e compartilhar diagramas Excalidraw
 
 Status: ready-for-agent
 Origem: sessão de grilling em 2026-10-11.
