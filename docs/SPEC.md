@@ -155,5 +155,4 @@ atual. Pra usar em outro dispositivo, colo meu token (ou abro `/me/:token`).
 
 ## Further Notes
 
-- Pesquisa de UI (2026-10-11): Base UI escolhido sobre Radix (ergonomia igual, docs em CSS Modules, release mensal, Toast estável) e React Aria (Toast ainda instável, API mais pesada).
 - Publicação no issue tracker pendente: tracker não configurado. Rodar `/setup-matt-pocock-skills` e depois republicar com label `ready-for-agent`.
