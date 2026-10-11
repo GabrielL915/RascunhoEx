@@ -1,4 +1,4 @@
-# Boundaries: o que o agente muda sozinho, propõe, ou deixa quieto
+# Code review boundaries: o que o agente muda sozinho, propõe, ou deixa quieto
 
 Notas são julgamento, não medição. Escala 1 a 5 em tudo.
 
