@@ -10,7 +10,7 @@
 - [ ] `account-domain` define o `HttpApiGroup` com `POST /owners` e os Schemas; token retornado só nessa resposta
 - [ ] `account-data-source` persiste SHA-256 do token; `account-resource` implementa o handler
 - [ ] Middleware de autenticação no HttpApi resolve `Authorization: Bearer <token>` pro owner (ou `Unauthorized`), disponível como Service pros outros groups
-- [ ] `account-data-access` expõe Service que garante um token: lê do browser ou chama `POST /owners` e guarda
+- [ ] `account-http-access` expõe Service que garante um token: lê do browser ou chama `POST /owners` e guarda
 - [ ] `account-feature-token` mostra o token com botão copiar numa rota de configurações
 - [ ] Client HTTP do front injeta o header em toda chamada autenticada
 - [ ] Token nunca aparece em URL de diagrama

@@ -98,17 +98,17 @@ atual. Pra usar em outro dispositivo, colo meu token (ou abro `/me/:token`).
 ### Estrutura de pacotes (padrão devmx, adaptado)
 - `apps/web` e `apps/api` mínimos: só compõem Layers e montam rotas.
 - Um pacote npm por camada, por domínio:
-  - `diagram-domain`, `diagram-data-access`, `diagram-data-source`, `diagram-resource`, `diagram-ui`, `diagram-feature-list`, `diagram-feature-editor`, `diagram-feature-view`, `diagram-feature-shell`.
-  - `account-domain`, `account-data-access`, `account-data-source`, `account-resource`, `account-ui`, `account-feature-token`, `account-feature-shell`.
+  - `diagram-domain`, `diagram-http-access`, `diagram-data-source`, `diagram-resource`, `diagram-ui`, `diagram-feature-list`, `diagram-feature-editor`, `diagram-feature-view`, `diagram-feature-shell`.
+  - `account-domain`, `account-http-access`, `account-data-source`, `account-resource`, `account-ui`, `account-feature-token`, `account-feature-shell`.
   - `shared-api` (compõe o `HttpApi` raiz a partir dos `HttpApiGroup` de cada domain), `shared-ui` (wrappers de Base UI com CSS Modules: Button, Dialog, DropdownMenu, Toast, Tooltip, Input), `shared-util-errors` (erros base com `Data.TaggedError`), `shared-util-data` (ids, datas).
 - Regras de dependência (travadas por lint):
   - `domain` → só `shared-util-*`.
   - `ui` → `shared-ui`, `shared-util-*`.
-  - `data-access` → `domain`, `shared-api`, `shared-util-*`.
-  - `feature-*` → `ui`, `data-access`, `domain`, `shared-*`.
+  - `http-access` → `domain`, `shared-api`, `shared-util-*`.
+  - `feature-*` → `ui`, `http-access`, `domain`, `shared-*`.
   - `data-source` → `domain`, `shared-util-*`.
   - `resource` → `data-source`, `domain`, `shared-api`, `shared-util-*`.
-  - `apps/web` → `feature-*`; `apps/api` → `resource`, `shared-api`. Front nunca importa `data-source`/`resource`; back nunca importa `ui`/`feature`/`data-access`.
+  - `apps/web` → `feature-*`; `apps/api` → `resource`, `shared-api`. Front nunca importa `data-source`/`resource`; back nunca importa `ui`/`feature`/`http-access`.
 - Camadas usam vocabulário Effect: `Service` (Context.Tag) + `Layer` (impl). Sem pastas `application/infrastructure/dtos`.
 - Convenção de módulos: cada módulo é uma pasta `Nome/index.ts(x)` com a implementação dentro. Nunca um `index.ts` que só re-exporta. Pacotes expõem `./*` via wildcard no `exports` apontando pra `src/*/index.ts`.
 

@@ -7,7 +7,7 @@
 **Status:** ready-for-agent
 
 - [ ] pnpm workspaces com `apps/*` e `packages/*`, Node 22, TypeScript strict, tsconfig base compartilhado
-- [ ] ESLint 9 flat config + Prettier + `eslint-plugin-boundaries` com as regras de dependência do spec (domain, ui, data-access, feature, data-source, resource, app, shared)
+- [ ] ESLint 9 flat config + Prettier + `eslint-plugin-boundaries` com as regras de dependência do spec (domain, ui, http-access, feature, data-source, resource, app, shared)
 - [ ] Convenção de módulo pasta `Nome/index.ts(x)`; pacotes expõem `./*` via wildcard no `exports`; nenhum barrel
 - [ ] `docker-compose.yml` sobe Postgres local; `.env.example` documentado
 - [ ] `shared-api` compõe o `HttpApi` raiz; um group de health expõe `GET /health`

@@ -8,7 +8,7 @@
 
 - [ ] Group ganha `GET /diagrams/:id` (auth obrigatório por ora) e `PUT /diagrams/:id` (dono) com erros `DiagramNotFound` e `Forbidden`
 - [ ] Repositório: findById, update (scene, title); `updated_at` atualizado no update
-- [ ] `diagram-data-access` expõe get e update
+- [ ] `diagram-http-access` expõe get e update
 - [ ] `diagram-feature-editor` monta `@excalidraw/excalidraw` com a cena carregada, `langCode` pt-BR e `theme` seguindo `prefers-color-scheme`
 - [ ] Autosave com debounce após a última mudança; não salva se a versão dos elementos não mudou
 - [ ] appState persistido limitado a viewBackgroundColor, scrollX, scrollY, zoom, gridSize
