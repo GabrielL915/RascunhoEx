@@ -95,7 +95,7 @@ atual. Pra usar em outro dispositivo, colo meu token (ou abro `/me/:token`).
 - Effect no front só na camada de dados: `HttpApiClient` gerado do contrato, `Schema` pra validação, erros tipados. Estado de UI com hooks comuns.
 - Back: `@effect/platform` `HttpApi` servido por `@effect/platform-node`. Sem Fastify. Persistência com `@effect/sql-pg`. Postgres via docker-compose.
 
-### Estrutura de pacotes (padrão devmx, adaptado)
+### Estrutura de pacotes
 - `apps/web` e `apps/api` mínimos: só compõem Layers e montam rotas.
 - Um pacote npm por camada, por domínio:
   - `diagram-domain`, `diagram-http-access`, `diagram-data-source`, `diagram-resource`, `diagram-ui`, `diagram-feature-list`, `diagram-feature-editor`, `diagram-feature-view`, `diagram-feature-shell`.
@@ -155,6 +155,5 @@ atual. Pra usar em outro dispositivo, colo meu token (ou abro `/me/:token`).
 
 ## Further Notes
 
-- Referência de estrutura: repositório `DeveloperParana/devmx` (Nx + Angular + NestJS). Adotamos a divisão de pacotes por camada e por tela, e a ideia de fronteiras por lint; trocamos Nx por pnpm + `eslint-plugin-boundaries`, Angular DI por Effect Service/Layer, e barrel files por pasta-módulo.
 - Pesquisa de UI (2026-10-11): Base UI escolhido sobre Radix (ergonomia igual, docs em CSS Modules, release mensal, Toast estável) e React Aria (Toast ainda instável, API mais pesada).
 - Publicação no issue tracker pendente: tracker não configurado. Rodar `/setup-matt-pocock-skills` e depois republicar com label `ready-for-agent`.
