@@ -23,18 +23,6 @@
   --gap: clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
   --fs-title: clamp(1.25rem, 1rem + 1.2vw, 1.75rem);
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: var(--shadow);
-    --surface: color-mix(in oklch, var(--shadow), var(--ghost) 7%);
-    --ink: var(--ghost);
-    --muted: color-mix(in oklch, var(--ghost), var(--shadow) 35%);
-    --line: color-mix(in oklch, var(--shadow), var(--ghost) 16%);
-    --accent: color-mix(in oklch, var(--baltic), var(--ghost) 28%);
-    --accent-ink: var(--shadow);
-    --danger: color-mix(in oklch, var(--oxblood), white 30%);
-  }
-}
 * { box-sizing: border-box; }
 body {
   margin: 0;

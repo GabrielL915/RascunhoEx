@@ -36,18 +36,6 @@
   --gap: clamp(0.5rem, 0.35rem + 0.8vw, 1rem);
   --fs-title: clamp(1.05rem, 0.9rem + 0.8vw, 1.4rem);
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: var(--shadow);
-    --surface: color-mix(in oklch, var(--shadow), var(--ghost) 7%);
-    --ink: var(--ghost);
-    --muted: color-mix(in oklch, var(--ghost), var(--shadow) 35%);
-    --line: color-mix(in oklch, var(--shadow), var(--ghost) 16%);
-    --accent: color-mix(in oklch, var(--baltic), var(--ghost) 28%);
-    --accent-ink: var(--shadow);
-    --danger: color-mix(in oklch, var(--oxblood), white 30%);
-  }
-}
 * { box-sizing: border-box; }
 html, body { block-size: 100%; }
 body {
@@ -406,7 +394,7 @@ function mountExcalidraw() {
   root.render(React.createElement(Excalidraw, {
     initialData: { elements, files },
     viewModeEnabled: !isOwner(),
-    theme: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+    theme: "light",
     langCode: "pt-BR",
     onChange,
     UIOptions: { canvasActions: { loadScene: false, saveToActiveFile: false, export: false, saveAsImage: false } },
