@@ -7,13 +7,18 @@
 <!-- PROTÓTIPO DESCARTÁVEL. Quatro variantes da tela de lista (rota /), trocadas por ?variant=A|B|C|D. Dados falsos, nada persiste. -->
 <style>
 :root {
-  --bg: oklch(98% 0 none);
-  --surface: oklch(100% 0 none);
-  --ink: oklch(20% 0 none);
-  --muted: oklch(50% 0 none);
-  --line: oklch(88% 0 none);
-  --accent: oklch(55% 0.18 260);
-  --accent-ink: oklch(99% 0 none);
+  --alabaster: oklch(89% 0.010 267);
+  --powder: oklch(79% 0.035 250);
+  --pacific: oklch(67% 0.077 209);
+  --charcoal: oklch(37% 0.033 266);
+  --carbon: oklch(22% 0.006 286);
+  --bg: var(--alabaster);
+  --surface: oklch(97% 0.005 267);
+  --ink: var(--carbon);
+  --muted: var(--charcoal);
+  --line: var(--powder);
+  --accent: var(--pacific);
+  --accent-ink: var(--carbon);
   --danger: oklch(55% 0.2 25);
   --radius: 0.625rem;
   --gap: clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
@@ -21,13 +26,13 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: oklch(18% 0 none);
-    --surface: oklch(23% 0 none);
-    --ink: oklch(94% 0 none);
-    --muted: oklch(65% 0 none);
-    --line: oklch(32% 0 none);
-    --accent: oklch(72% 0.15 260);
-    --accent-ink: oklch(15% 0 none);
+    --bg: var(--carbon);
+    --surface: oklch(28% 0.018 270);
+    --ink: var(--alabaster);
+    --muted: var(--powder);
+    --line: var(--charcoal);
+    --accent: var(--pacific);
+    --accent-ink: var(--carbon);
   }
 }
 * { box-sizing: border-box; }
