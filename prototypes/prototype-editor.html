@@ -18,18 +18,18 @@
 <!-- PROTÓTIPO DESCARTÁVEL. Três variantes da rota /d/:id (editor do dono e view do visitante na mesma tela), trocadas por ?variant=A|B|C e ?as=owner|visitor. Excalidraw real via CDN, nada persiste. -->
 <style>
 :root {
-  --alabaster: oklch(89% 0.010 267);
-  --powder: oklch(79% 0.035 250);
-  --pacific: oklch(67% 0.077 209);
-  --charcoal: oklch(37% 0.033 266);
-  --carbon: oklch(22% 0.006 286);
-  --bg: var(--alabaster);
-  --surface: oklch(97% 0.005 267);
-  --ink: var(--carbon);
-  --muted: var(--charcoal);
-  --line: var(--powder);
-  --accent: var(--pacific);
-  --accent-ink: var(--carbon);
+  --indigo: oklch(25% 0.064 270);
+  --prussian: oklch(13% 0.082 273);
+  --beige: oklch(96% 0.034 109);
+  --bronze: oklch(75% 0.084 45);
+  --rose: oklch(63% 0.105 19);
+  --bg: var(--beige);
+  --surface: oklch(98.5% 0.02 109);
+  --ink: var(--prussian);
+  --muted: var(--indigo);
+  --line: color-mix(in oklch, var(--beige), var(--indigo) 22%);
+  --accent: var(--rose);
+  --accent-ink: var(--beige);
   --danger: oklch(55% 0.2 25);
   --ok: oklch(60% 0.17 150);
   --warn: oklch(70% 0.17 75);
@@ -39,13 +39,13 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: var(--carbon);
-    --surface: oklch(28% 0.018 270);
-    --ink: var(--alabaster);
-    --muted: var(--powder);
-    --line: var(--charcoal);
-    --accent: var(--pacific);
-    --accent-ink: var(--carbon);
+    --bg: var(--prussian);
+    --surface: var(--indigo);
+    --ink: var(--beige);
+    --muted: var(--bronze);
+    --line: color-mix(in oklch, var(--indigo), var(--beige) 22%);
+    --accent: var(--rose);
+    --accent-ink: var(--prussian);
   }
 }
 * { box-sizing: border-box; }
