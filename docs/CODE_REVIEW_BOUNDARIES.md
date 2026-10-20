@@ -28,18 +28,18 @@ Duas travas que valem acima da fórmula:
 
 ## Tickets, com as notas atuais
 
-| # | Ticket | Valor | Risco | Esforço | Prioridade |
+| # | Issue | Valor | Risco | Esforço | Prioridade |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Scaffold + health | 5 | 2 | 4 | 5,0 |
-| 02 | Token de dono | 5 | 3 | 3 | 5,0 |
-| 03 | Criar e listar | 5 | 2 | 3 | 6,7 |
-| 04 | Editor com autosave | 5 | 3 | 4 | 3,8 |
-| 05 | Link público | 5 | 2 | 2 | 10,0 |
-| 06 | Miniatura | 3 | 1 | 2 | 7,5 |
-| 07 | Renomear, deletar, copiar | 3 | 2 | 2 | 6,0 |
-| 08 | Upload .excalidraw | 4 | 2 | 2 | 8,0 |
-| 09 | Importar token | 3 | 1 | 1 | 15,0 |
-| 10 | Limite de 5 MB | 2 | 1 | 1 | 10,0 |
+| #1 | Scaffold + health | 5 | 2 | 4 | 5,0 |
+| #2 | Token de dono | 5 | 3 | 3 | 5,0 |
+| #3 | Criar e listar | 5 | 2 | 3 | 6,7 |
+| #4 | Editor com autosave | 5 | 3 | 4 | 3,8 |
+| #5 | Link público | 5 | 2 | 2 | 10,0 |
+| #6 | Miniatura | 3 | 1 | 2 | 7,5 |
+| #7 | Renomear, deletar, copiar | 3 | 2 | 2 | 6,0 |
+| #8 | Upload .excalidraw | 4 | 2 | 2 | 8,0 |
+| #9 | Importar token | 3 | 1 | 1 | 15,0 |
+| #10 | Limite de 5 MB | 2 | 1 | 1 | 10,0 |
 
 Leitura: a ordem de dependência manda nos tickets 01 a 04, não a prioridade. Depois do 04, a fórmula sugere 05, 09, 08, 06, 07, 10. Os tickets 09 e 10 são baratos e sobem na tabela por isso, não por valor.
 
