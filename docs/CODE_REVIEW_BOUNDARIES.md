@@ -26,7 +26,7 @@ Duas travas que valem acima da fórmula:
 1. Nada que o pedido não citou e o spec não cobre entra no entregável. Se um exemplo no brief virar exigência, parar e perguntar. Um gráfico "de exemplo" não é um gráfico pedido.
 2. Mudança de contrato HTTP, schema do banco, ou fronteira entre camadas é sempre risco 5, independente do tamanho do diff.
 
-## Tickets, com as notas atuais
+## Issues, com as notas atuais
 
 | # | Issue | Valor | Risco | Esforço | Prioridade |
 | --- | --- | --- | --- | --- | --- |
@@ -41,7 +41,7 @@ Duas travas que valem acima da fórmula:
 | #9 | Importar token | 3 | 1 | 1 | 15,0 |
 | #10 | Limite de 5 MB | 2 | 1 | 1 | 10,0 |
 
-Leitura: a ordem de dependência manda nos tickets 01 a 04, não a prioridade. Depois do 04, a fórmula sugere 05, 09, 08, 06, 07, 10. Os tickets 09 e 10 são baratos e sobem na tabela por isso, não por valor.
+Leitura: a ordem de dependência manda nas issues #1 a #4, não a prioridade. Depois da #4, a fórmula sugere #5, #9, #8, #6, #7, #10. As issues #9 e #10 são baratas e sobem na tabela por isso, não por valor.
 
 ## Findings de code review
 
