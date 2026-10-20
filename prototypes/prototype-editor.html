@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PROTÓTIPO · Editor /d/:id</title>
+<script>window.EXCALIDRAW_ASSET_PATH = "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/";</script>
+<script type="importmap">
+{ "imports": {
+  "react": "https://esm.sh/react@19.0.0",
+  "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
+  "react-dom": "https://esm.sh/react-dom@19.0.0",
+  "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+  "@excalidraw/excalidraw": "https://esm.sh/@excalidraw/excalidraw@0.18.0?external=react,react-dom"
+} }
+</script>
+<link rel="stylesheet" href="https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/index.css">
+<!-- PROTÓTIPO DESCARTÁVEL. Três variantes da rota /d/:id (editor do dono e view do visitante na mesma tela), trocadas por ?variant=A|B|C e ?as=owner|visitor. Excalidraw real via CDN, nada persiste. -->
+<style>
+:root {
+  --bg: oklch(98% 0 none);
+  --surface: oklch(100% 0 none);
+  --ink: oklch(20% 0 none);
+  --muted: oklch(50% 0 none);
+  --line: oklch(88% 0 none);
+  --accent: oklch(55% 0.18 260);
+  --accent-ink: oklch(99% 0 none);
+  --danger: oklch(55% 0.2 25);
+  --ok: oklch(60% 0.17 150);
+  --warn: oklch(70% 0.17 75);
+  --radius: 0.625rem;
+  --gap: clamp(0.5rem, 0.35rem + 0.8vw, 1rem);
+  --fs-title: clamp(1.05rem, 0.9rem + 0.8vw, 1.4rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: oklch(18% 0 none);
+    --surface: oklch(23% 0 none);
+    --ink: oklch(94% 0 none);
+    --muted: oklch(65% 0 none);
+    --line: oklch(32% 0 none);
+    --accent: oklch(72% 0.15 260);
+    --accent-ink: oklch(15% 0 none);
+  }
+}
+* { box-sizing: border-box; }
+html, body { block-size: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  overflow: clip;
+}
+h1, h2, p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+button {
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding-block: 0.45rem;
+  padding-inline: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+button.ghost { border-color: transparent; background: transparent; }
+button.danger { color: var(--danger); }
+button.icon { padding-inline: 0.5rem; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:active { transform: translateY(1px); }
+@media (hover: hover) and (pointer: fine) {
+  button:hover { background: color-mix(in oklch, var(--surface), var(--ink) 6%); }
+  button.primary:hover { background: color-mix(in oklch, var(--accent), var(--ink) 12%); }
+}
+.muted { color: var(--muted); font-size: 0.875rem; }
+.row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.push { margin-inline-start: auto; }
+.token {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  padding-block: 0.2rem;
+  padding-inline: 0.6rem;
+}
+.title-input {
+  border: 1px solid transparent;
+  background: transparent;
+  font-weight: 600;
+  font-size: var(--fs-title);
+  border-radius: 6px;
+  padding: 0.15rem 0.4rem;
+  min-inline-size: 0;
+  field-sizing: content;
+  max-inline-size: 100%;
+}
+.title-input:read-only { pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .title-input:not(:read-only):hover { border-color: var(--line); } }
+.title-input:focus-visible { border-color: var(--line); outline-offset: 0; }
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  background: color-mix(in oklch, var(--warn), var(--surface) 75%);
+  color: var(--ink);
+}
+
+/* status de save */
+.status { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--muted); }
+.status::before { content: ""; inline-size: 0.55rem; block-size: 0.55rem; border-radius: 50%; background: var(--line); }
+.status[data-s="saving"]::before { background: var(--warn); }
+.status[data-s="saved"]::before { background: var(--ok); }
+.status[data-s="error"]::before { background: var(--danger); }
+.status[data-s="error"] { color: var(--danger); }
+@media (prefers-reduced-motion: no-preference) {
+  .status[data-s="saving"]::before { animation: pulse 0.9s ease-in-out infinite alternate; }
+}
+@keyframes pulse { to { opacity: 0.35; } }
+
+/* canvas: Excalidraw real */
+.canvas { min-block-size: 0; min-inline-size: 0; display: grid; }
+.canvas > * { min-block-size: 0; }
+.canvas[data-readonly] .excalidraw { --color-primary: var(--muted); }
+
+/* A · Barra clássica */
+.a-shell { block-size: 100dvh; display: grid; grid-template-rows: auto 1fr; }
+.a-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.5rem;
+  padding-inline: var(--gap);
+  border-block-end: 1px solid var(--line);
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+.a-bar .title-wrap { display: flex; align-items: center; gap: 0.5rem; min-inline-size: 0; flex: 1; }
+.a-bar .right { display: flex; align-items: center; gap: 0.5rem; margin-inline-start: auto; }
+
+/* B · HUD sobre o canvas */
+.b-shell { block-size: 100dvh; display: grid; }
+.b-shell > * { grid-area: 1 / 1; }
+.b-hud { pointer-events: none; display: grid; grid-template-rows: auto 1fr auto; padding: var(--gap); }
+.b-hud > * { pointer-events: auto; }
+.b-top { display: flex; justify-content: space-between; align-items: start; gap: 0.5rem; flex-wrap: wrap; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.3rem 0.4rem 0.3rem 0.5rem;
+  box-shadow: 0 4px 14px oklch(0% 0 none / 0.12);
+  max-inline-size: 100%;
+}
+.pill button { border-radius: 999px; padding-block: 0.3rem; }
+.pill .title-input { font-size: 1rem; }
+.b-bottom { display: flex; justify-content: center; align-self: end; }
+.b-visitor {
+  justify-content: center;
+  gap: 0.75rem;
+  padding-inline: 1rem;
+}
+
+/* C · Painel lateral */
+.c-shell { block-size: 100dvh; display: flex; flex-wrap: wrap; }
+.c-shell .canvas { flex-basis: 0; flex-grow: 999; min-inline-size: 60%; min-block-size: 60dvh; }
+.c-rail {
+  flex-basis: 18rem;
+  flex-grow: 1;
+  background: var(--surface);
+  border-inline-start: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+}
+.c-rail > header { padding: var(--gap); border-block-end: 1px solid var(--line); display: grid; gap: 0.5rem; }
+.c-rail > .body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: var(--gap); display: grid; gap: var(--gap); align-content: start; }
+.c-rail > footer { padding: var(--gap); border-block-start: 1px solid var(--line); display: grid; gap: 0.5rem; }
+.c-field { display: grid; gap: 0.3rem; }
+.c-field label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.c-link { display: flex; gap: 0.4rem; }
+.c-link input {
+  flex: 1; min-inline-size: 0;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.4rem 0.6rem; background: var(--bg);
+  font-family: ui-monospace, monospace; font-size: 0.8rem;
+}
+.c-thumb { aspect-ratio: 16 / 10; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); overflow: clip; }
+.c-thumb svg { inline-size: 100%; block-size: 100%; }
+.c-thumb path { stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; }
+.c-kv { display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.75rem; font-size: 0.85rem; }
+.c-kv dt { color: var(--muted); }
+.c-kv dd { margin: 0; }
+
+/* toast de link copiado */
+.toast {
+  position: fixed;
+  inset-block-start: 1rem;
+  inset-inline: 0;
+  margin-inline: auto;
+  inline-size: fit-content;
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  z-index: 9;
+  opacity: 0;
+  pointer-events: none;
+}
+.toast[data-show] { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) { .toast { transition: opacity 180ms ease-out; } }
+
+/* switcher do protótipo, não faz parte do design */
+.proto-bar {
+  position: fixed;
+  inset-block-end: 1rem;
+  inset-inline: 0;
+  margin-inline: auto;
+  inline-size: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: oklch(15% 0 none);
+  color: oklch(97% 0 none);
+  border-radius: 999px;
+  padding: 0.35rem 0.5rem;
+  box-shadow: 0 8px 24px oklch(0% 0 none / 0.35);
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  z-index: 10;
+}
+.proto-bar button { background: transparent; border: 0; color: inherit; border-radius: 999px; padding: 0.25rem 0.6rem; }
+.proto-bar button[aria-pressed="true"] { background: oklch(35% 0 none); }
+@media (hover: hover) and (pointer: fine) { .proto-bar button:hover { background: oklch(30% 0 none); } }
+.proto-bar .tag { background: oklch(70% 0.2 60); color: oklch(15% 0 none); border-radius: 999px; padding: 0.1rem 0.5rem; font-weight: 700; }
+.proto-bar .sep { inline-size: 1px; block-size: 1.2rem; background: oklch(40% 0 none); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast">Link copiado</div>
+<div class="proto-bar">
+  <span class="tag">PROTÓTIPO</span>
+  <button id="prev" aria-label="anterior">←</button>
+  <span id="label"></span>
+  <button id="next" aria-label="próxima">→</button>
+  <span class="sep"></span>
+  <button id="as-owner">dono</button>
+  <button id="as-visitor">visitante</button>
+</div>
+
+<script type="module">
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Excalidraw, convertToExcalidrawElements } from "@excalidraw/excalidraw";
+
+const diagram = { id: "k7f2qz", title: "Arquitetura do monolito", updatedAt: "hoje, 14:20", createdAt: "11 out" };
+const token = "ow_7Kq2mX9vL4pZ";
+const link = `rascunho.app/d/${diagram.id}`;
+let elements = convertToExcalidrawElements([
+  { type: "rectangle", id: "cli", x: 80, y: 120, width: 200, height: 90, label: { text: "src/client" } },
+  { type: "rectangle", id: "srv", x: 420, y: 120, width: 200, height: 90, label: { text: "src/server (Hono)" } },
+  { type: "rectangle", id: "db", x: 420, y: 320, width: 200, height: 90, label: { text: "Postgres" } },
+  { type: "arrow", x: 280, y: 165, width: 140, height: 0, label: { text: "/api" }, start: { id: "cli" }, end: { id: "srv" } },
+  { type: "arrow", x: 520, y: 210, width: 0, height: 110, label: { text: "Drizzle" }, start: { id: "srv" }, end: { id: "db" } },
+]);
+let files = {};
+const statusText = { idle: "Sem alterações", saving: "Salvando…", saved: "Salvo", error: "Erro ao salvar" };
+const params = new URLSearchParams(location.search);
+const keys = ["A", "B", "C"];
+let current = keys.includes(params.get("variant")) ? params.get("variant") : "A";
+let role = params.get("as") === "visitor" ? "visitor" : "owner";
+let status = "idle";
+let title = diagram.title;
+
+const isOwner = () => role === "owner";
+const canvas = () => `<div class="canvas" ${isOwner() ? "" : "data-readonly"} id="canvas"></div>`;
+const titleField = () => `<input class="title-input" id="title" value="${title}" aria-label="título" ${isOwner() ? "" : "readonly"}>`;
+const statusEl = () => isOwner() ? `<span class="status" data-s="${status}">${statusText[status]}</span>` : "";
+const copyBtn = (cls = "") => `<button class="${cls}" data-copy>⧉ Copiar link</button>`;
+
+const variants = {
+  A: { name: "Barra clássica", render: () => `
+    <div class="a-shell">
+      <header class="a-bar">
+        ${isOwner() ? `<button class="ghost icon" aria-label="voltar pra lista" title="Meus diagramas">←</button>` : ""}
+        <div class="title-wrap">
+          ${titleField()}
+          ${isOwner() ? "" : `<span class="badge">Somente leitura</span>`}
+        </div>
+        <div class="right">
+          ${statusEl()}
+          ${copyBtn()}
+          ${isOwner() ? `<span class="token" title="seu token">${token}</span><button class="ghost icon" aria-label="mais">⋯</button>` : `<button class="primary">Criar o meu</button>`}
+        </div>
+      </header>
+      ${canvas()}
+    </div>` },
+
+  B: { name: "Canvas total, HUD flutuante", render: () => `
+    <div class="b-shell">
+      ${canvas()}
+      <div class="b-hud">
+        <div class="b-top">
+          <div class="pill">
+            ${isOwner() ? `<button class="ghost icon" aria-label="voltar pra lista">←</button>` : ""}
+            ${titleField()}
+            ${isOwner() ? "" : `<span class="badge">Somente leitura</span>`}
+          </div>
+          <div class="pill">
+            ${statusEl()}
+            ${copyBtn("ghost")}
+            ${isOwner() ? `<button class="ghost icon" aria-label="mais">⋯</button>` : ""}
+          </div>
+        </div>
+        <div></div>
+        <div class="b-bottom">
+          ${isOwner() ? "" : `<div class="pill b-visitor"><span class="muted">Você está vendo o diagrama de outra pessoa</span><button class="primary">Criar o meu no RascunhoEx</button></div>`}
+        </div>
+      </div>
+    </div>` },
+
+  C: { name: "Painel lateral", render: () => `
+    <div class="c-shell">
+      ${canvas()}
+      <aside class="c-rail">
+        <header>
+          <div class="row">
+            ${isOwner() ? `<button class="ghost icon" aria-label="voltar pra lista">←</button>` : ""}
+            <span class="muted">${isOwner() ? "Meus diagramas" : "RascunhoEx"}</span>
+            ${isOwner() ? "" : `<span class="badge push">Somente leitura</span>`}
+          </div>
+          ${titleField()}
+          ${statusEl()}
+        </header>
+        <div class="body">
+          <div class="c-field">
+            <label>Link público</label>
+            <div class="c-link"><input readonly value="${link}">${copyBtn("icon")}</div>
+            <span class="muted">Quem abrir vê sempre a versão atual.</span>
+          </div>
+          ${isOwner() ? `
+          <div class="c-field">
+            <label>Miniatura</label>
+            <div class="c-thumb" id="thumb"></div>
+            <span class="muted">regenerada a cada save</span>
+          </div>` : ""}
+          <dl class="c-kv">
+            <dt>Editado</dt><dd>${diagram.updatedAt}</dd>
+            <dt>Criado</dt><dd>${diagram.createdAt}</dd>
+            <dt>Tamanho</dt><dd>${sizeMb()} MB de 5 MB</dd>
+          </dl>
+        </div>
+        <footer>
+          ${isOwner()
+            ? `<div class="row"><span class="muted">Token</span><span class="token">${token}</span></div><button class="ghost danger" style="justify-self:start">Deletar diagrama</button>`
+            : `<button class="primary">Criar o meu diagrama</button>`}
+        </footer>
+      </aside>
+    </div>` },
+};
+
+const sizeMb = () => (JSON.stringify({ elements, files }).length / 1e6).toFixed(2);
+let saveTimer;
+let lastVersion = 0;
+const versionOf = els => els.reduce((n, el) => n + el.version, 0);
+function onChange(els, _appState, fls) {
+  elements = els;
+  files = fls;
+  const v = versionOf(els);
+  if (!isOwner() || v === lastVersion) return;
+  lastVersion = v;
+  status = "saving";
+  paintStatus();
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { status = +sizeMb() > 5 ? "error" : "saved"; paintStatus(); paintThumb(); }, 800);
+}
+function paintStatus() {
+  document.querySelectorAll(".status").forEach(el => { el.dataset.s = status; el.textContent = statusText[status]; });
+}
+async function paintThumb() {
+  const el = document.getElementById("thumb");
+  if (!el) return;
+  const { exportToSvg } = await import("@excalidraw/excalidraw");
+  const svg = await exportToSvg({ elements, files, appState: { exportBackground: false } });
+  svg.removeAttribute("width"); svg.removeAttribute("height");
+  el.replaceChildren(svg);
+}
+let root;
+function mountExcalidraw() {
+  root?.unmount();
+  root = createRoot(document.getElementById("canvas"));
+  root.render(React.createElement(Excalidraw, {
+    initialData: { elements, files, appState: { viewBackgroundColor: "transparent" } },
+    viewModeEnabled: !isOwner(),
+    theme: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+    langCode: "pt-BR",
+    onChange,
+    UIOptions: { canvasActions: { loadScene: false, saveToActiveFile: false, export: false, saveAsImage: false } },
+  }));
+}
+
+function render() {
+  const v = variants[current];
+  document.getElementById("root").innerHTML = v.render();
+  document.getElementById("label").textContent = `${current} (${v.name})`;
+  document.getElementById("as-owner").setAttribute("aria-pressed", isOwner());
+  document.getElementById("as-visitor").setAttribute("aria-pressed", !isOwner());
+  document.title = `PROTÓTIPO · ${current} · ${v.name} · ${role}`;
+  const url = new URL(location);
+  url.searchParams.set("variant", current);
+  url.searchParams.set("as", role);
+  history.replaceState(null, "", url);
+  lastVersion = versionOf(elements);
+  mountExcalidraw();
+  paintThumb();
+  document.getElementById("title").addEventListener("input", e => { title = e.target.value; });
+  document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => {
+    const t = document.getElementById("toast");
+    t.setAttribute("data-show", "");
+    setTimeout(() => t.removeAttribute("data-show"), 1200);
+  }));
+}
+function step(n) { current = keys[(keys.indexOf(current) + n + keys.length) % keys.length]; render(); }
+document.getElementById("prev").addEventListener("click", () => step(-1));
+document.getElementById("next").addEventListener("click", () => step(1));
+document.getElementById("as-owner").addEventListener("click", () => { role = "owner"; render(); });
+document.getElementById("as-visitor").addEventListener("click", () => { role = "visitor"; render(); });
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input, textarea, [contenteditable]")) return;
+  if (e.key === "ArrowLeft") step(-1);
+  if (e.key === "ArrowRight") step(1);
+  if (e.key === "v") { role = isOwner() ? "visitor" : "owner"; render(); }
+});
+render();
+</script>
+</body>
+</html>
