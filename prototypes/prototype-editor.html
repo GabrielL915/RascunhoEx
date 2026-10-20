@@ -403,7 +403,7 @@ function mountExcalidraw() {
   root?.unmount();
   root = createRoot(document.getElementById("canvas"));
   root.render(React.createElement(Excalidraw, {
-    initialData: { elements, files, appState: { viewBackgroundColor: "transparent" } },
+    initialData: { elements, files },
     viewModeEnabled: !isOwner(),
     theme: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
     langCode: "pt-BR",
