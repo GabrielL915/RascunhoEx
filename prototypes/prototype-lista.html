@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PROTÓTIPO · Lista de diagramas</title>
-<!-- PROTÓTIPO DESCARTÁVEL. Quatro variantes da tela de lista (rota /), trocadas por ?variant=A|B|C|D. Dados falsos, nada persiste. -->
+<!-- PROTÓTIPO DESCARTÁVEL. Tela de lista (rota /). Variante escolhida: D (YouTube). As outras ficaram no histórico do branch. Dados falsos, nada persiste. -->
 <style>
 :root {
   --shadow: oklch(24% 0.011 285);
@@ -101,108 +101,6 @@ button:active { transform: translateY(1px); }
   padding-block: 0.25rem;
   padding-inline: 0.7rem;
 }
-
-/* A · Galeria */
-.a-head { display: flex; gap: var(--gap); align-items: end; flex-wrap: wrap; }
-.a-head h1 { font-size: var(--fs-title); }
-.a-grid {
-  display: grid;
-  gap: var(--gap);
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
-}
-.a-card {
-  display: grid;
-  grid-row: span 3;
-  grid-template-rows: subgrid;
-  row-gap: 0.5rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 0.6rem;
-}
-.a-card .title { font-weight: 600; }
-.a-card .actions { display: flex; gap: 0.25rem; }
-.a-card .actions button { min-block-size: 2rem; padding-inline: 0.8rem; }
-.a-new {
-  border: 2px dashed var(--line);
-  background: transparent;
-  font-size: inherit;
-  font-weight: inherit;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  gap: 0.25rem;
-  min-block-size: 10rem;
-  border-radius: var(--radius);
-}
-
-/* B · Explorador */
-.b-shell { display: flex; flex-wrap: wrap; gap: var(--gap); align-items: start; }
-.b-side {
-  flex-basis: 18rem; flex-grow: 1;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  display: grid;
-  gap: 0;
-}
-.b-main { flex-basis: 0; flex-grow: 999; min-inline-size: 55%; display: grid; gap: var(--gap); }
-.b-side header { padding: 0.75rem; border-block-end: 1px solid var(--line); display: grid; gap: 0.5rem; }
-.b-side h1 { font-size: 1.05rem; }
-.b-list { list-style: none; margin: 0; padding: 0; display: grid; }
-.b-item {
-  display: grid;
-  grid-template-columns: 3rem 1fr;
-  gap: 0.6rem;
-  align-items: center;
-  padding: 0.5rem 0.75rem;
-  border-block-end: 1px solid var(--line);
-  cursor: pointer;
-}
-.b-item .thumb { aspect-ratio: 1; border-radius: 4px; }
-.b-item[aria-current="true"] { background: color-mix(in oklch, var(--accent), var(--surface) 85%); }
-@media (hover: hover) and (pointer: fine) { .b-item:hover { background: color-mix(in oklch, var(--surface), var(--ink) 5%); } }
-.b-side footer { padding: 0.75rem; display: grid; gap: 0.4rem; }
-.b-preview { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--gap); display: grid; gap: var(--gap); }
-.b-preview .thumb { aspect-ratio: 16 / 9; }
-.b-preview h2 { font-size: var(--fs-title); }
-.b-preview input { border: 1px solid transparent; background: transparent; font-size: var(--fs-title); font-weight: 600; inline-size: 100%; border-radius: 6px; padding: 0.2rem 0.4rem; }
-.b-preview input:focus-visible { border-color: var(--line); }
-.b-link { display: flex; gap: 0.5rem; }
-.b-link input { flex: 1; border: 1px solid var(--line); border-radius: var(--radius); padding: 0.5rem 0.7rem; background: var(--bg); font-family: ui-monospace, monospace; font-size: 0.85rem; }
-
-/* C · Fluxo */
-.c-drop {
-  border: 2px dashed var(--line);
-  border-radius: var(--radius);
-  padding: clamp(1.5rem, 1rem + 3vw, 3rem);
-  display: grid;
-  justify-items: center;
-  gap: 0.75rem;
-  text-align: center;
-}
-.c-drop h1 { font-size: var(--fs-title); }
-.c-table { display: grid; border: 1px solid var(--line); border-radius: var(--radius); overflow: clip; background: var(--surface); }
-.c-row {
-  display: grid;
-  grid-template-columns: 2.5rem 1fr auto;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.5rem 0.75rem;
-  border-block-end: 1px solid var(--line);
-}
-.c-row:last-child { border-block-end: 0; }
-.c-row .thumb { aspect-ratio: 1; border-radius: 4px; }
-.c-row .title { font-weight: 600; }
-.c-row .meta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.c-row .meta code { font-size: 0.8rem; color: var(--muted); }
-.c-row .actions { display: flex; gap: 0.25rem; }
-.c-row .actions button { min-block-size: 2rem; padding-inline: 0.8rem; }
-@media (hover: hover) and (pointer: fine) {
-  .c-row .actions { opacity: 0.35; }
-  .c-row:hover .actions, .c-row:focus-within .actions { opacity: 1; }
-}
-.c-foot { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
 
 /* D · YouTube */
 .d-top {
@@ -347,90 +245,6 @@ const thumb = d => `<div class="thumb"><svg viewBox="0 0 200 80" preserveAspectR
 const link = d => `rascunho.app/d/${d.id}`;
 
 const variants = {
-  A: { name: "Galeria", render: () => `
-    <header class="a-head">
-      <div><h1>Meus diagramas</h1><p class="muted">${diagrams.length} diagramas · ordenados por edição</p></div>
-      <div class="row push">
-        <span class="token" title="seu token de dono">${token}</span>
-        <button>Enviar .excalidraw</button>
-        <button class="primary">Novo diagrama</button>
-      </div>
-    </header>
-    <section class="a-grid">
-      <button class="a-new"><strong>+ Novo diagrama</strong><span class="muted">ou solte um .excalidraw aqui</span></button>
-      ${diagrams.map(d => `
-        <article class="a-card">
-          ${thumb(d)}
-          <div><div class="title">${d.title}</div><div class="muted">${d.at}</div></div>
-          <div class="actions">
-            <button class="primary">Abrir</button>
-            <button>Copiar link</button>
-            <button class="ghost icon push" aria-label="mais">⋯</button>
-          </div>
-        </article>`).join("")}
-    </section>` },
-
-  B: { name: "Explorador com preview", render: (sel = 0) => `
-    <div class="b-shell">
-      <aside class="b-side">
-        <header>
-          <div class="row"><h1>RascunhoEx</h1><button class="primary push">+ Novo</button></div>
-          <input placeholder="Buscar…" style="border:1px solid var(--line);border-radius:var(--radius);padding:0.4rem 0.6rem;background:var(--bg)">
-        </header>
-        <ul class="b-list">
-          ${diagrams.map((d, i) => `
-            <li class="b-item" data-i="${i}" aria-current="${i === sel}">
-              ${thumb(d)}
-              <div><div style="font-weight:600">${d.title}</div><div class="muted">${d.at}</div></div>
-            </li>`).join("")}
-        </ul>
-        <footer>
-          <span class="muted">Seu token</span>
-          <div class="row"><span class="token">${token}</span><button class="ghost">copiar</button></div>
-          <button class="ghost" style="justify-self:start">Enviar .excalidraw</button>
-        </footer>
-      </aside>
-      <section class="b-main">
-        <div class="b-preview">
-          <input value="${diagrams[sel].title}" aria-label="título">
-          ${thumb(diagrams[sel])}
-          <div class="b-link"><input readonly value="${link(diagrams[sel])}"><button>Copiar link</button></div>
-          <div class="row">
-            <button class="primary">Abrir no editor</button>
-            <span class="muted">editado ${diagrams[sel].at}</span>
-            <button class="ghost danger push">Deletar</button>
-          </div>
-        </div>
-      </section>
-    </div>` },
-
-  C: { name: "Fluxo: solte, liste, copie", render: () => `
-    <section class="c-drop">
-      <h1>Solte um .excalidraw aqui</h1>
-      <p class="muted">ou</p>
-      <div class="row"><button class="primary">Criar diagrama em branco</button><button>Escolher arquivo</button></div>
-    </section>
-    <section class="c-table">
-      ${diagrams.map(d => `
-        <div class="c-row">
-          ${thumb(d)}
-          <div>
-            <div class="title">${d.title}</div>
-            <div class="meta"><code>${link(d)}</code><span class="muted">${d.at}</span></div>
-          </div>
-          <div class="actions">
-            <button>Copiar link</button>
-            <button>Abrir</button>
-            <button class="ghost">Renomear</button>
-            <button class="ghost danger">Deletar</button>
-          </div>
-        </div>`).join("")}
-    </section>
-    <footer class="c-foot muted">
-      <span>Seu token: <span class="token">${token}</span></span>
-      <button class="ghost">copiar</button>
-      <button class="ghost push">Entrar com outro token</button>
-    </footer>` },
   D: { name: "YouTube", render: () => `
     <header class="d-top">
       <span class="brand">▶ RascunhoEx</span>
@@ -471,16 +285,14 @@ const variants = {
 
 const keys = Object.keys(variants);
 const params = new URLSearchParams(location.search);
-let current = keys.includes(params.get("variant")) ? params.get("variant") : "A";
-let selected = 0;
+let current = keys.includes(params.get("variant")) ? params.get("variant") : "D";
 
 function render() {
   const v = variants[current];
-  document.getElementById("root").innerHTML = v.render(selected);
+  document.getElementById("root").innerHTML = v.render();
   document.getElementById("label").textContent = `${current} (${v.name})`;
   document.title = `PROTÓTIPO · ${current} · ${v.name}`;
   const url = new URL(location); url.searchParams.set("variant", current); history.replaceState(null, "", url);
-  document.querySelectorAll(".b-item").forEach(el => el.addEventListener("click", () => { selected = +el.dataset.i; render(); }));
 }
 function step(n) { current = keys[(keys.indexOf(current) + n + keys.length) % keys.length]; render(); }
 document.getElementById("prev").addEventListener("click", () => step(-1));
