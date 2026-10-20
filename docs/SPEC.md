@@ -103,7 +103,7 @@ atual. Pra usar em outro dispositivo, colo meu token (ou abro `/me/:token`).
 - Server, uma pasta por camada, subpasta por domínio (`account`, `diagram`) quando fizer sentido:
   - `domain/`: tipos, erros (`_tag`), regras puras. Não importa nada interno.
   - `db/`: schema Drizzle, migrations, repositórios (funções que recebem o client do Drizzle). Importa só `domain`.
-  - `http/`: schemas Zod, middleware de auth, rotas Hono por recurso. Importa `domain` e `db`.
+  - `http/`: schemas Zod, middleware de auth, rotas Hono por recurso. Importa `domain` e `db`. Segue o guia de boas práticas do Hono (https://hono.dev/docs/guides/best-practices): um sub-app `Hono` por recurso com caminhos relativos, montado em `main.ts` via `app.route('/api/diagrams', ...)`; handlers inline depois do path, sem controllers, pra manter a inferência dos params; cada módulo de rotas é uma função fábrica que recebe os repositórios e devolve o sub-app; middleware via `createMiddleware` de `hono/factory`.
   - `main.ts`: lê env, conecta no banco, roda migrations, monta o app Hono, serve.
 - Client, uma pasta por camada:
   - `api/`: instância axios, funções por recurso, tipos de resposta declarados à mão, erros da API (`_tag`). Não importa nada interno.
