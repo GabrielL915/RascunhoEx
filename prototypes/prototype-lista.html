@@ -10,13 +10,14 @@
   --shadow: oklch(24% 0.011 285);
   --oxblood: oklch(42% 0.161 29);
   --baltic: oklch(46% 0.093 250);
-  --bg: oklch(96% 0.004 285);
-  --surface: oklch(99.5% 0.002 285);
+  --ghost: oklch(97.5% 0.009 290);
+  --bg: var(--ghost);
+  --surface: color-mix(in oklch, var(--ghost), white 60%);
   --ink: var(--shadow);
-  --muted: color-mix(in oklch, var(--shadow), var(--bg) 45%);
-  --line: color-mix(in oklch, var(--bg), var(--shadow) 14%);
+  --muted: color-mix(in oklch, var(--shadow), var(--ghost) 45%);
+  --line: color-mix(in oklch, var(--ghost), var(--shadow) 14%);
   --accent: var(--baltic);
-  --accent-ink: oklch(99% 0 none);
+  --accent-ink: var(--ghost);
   --danger: var(--oxblood);
   --radius: 0.625rem;
   --gap: clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
@@ -25,11 +26,11 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: var(--shadow);
-    --surface: color-mix(in oklch, var(--shadow), white 7%);
-    --ink: oklch(93% 0.004 285);
-    --muted: oklch(68% 0.008 285);
-    --line: color-mix(in oklch, var(--shadow), white 16%);
-    --accent: color-mix(in oklch, var(--baltic), white 28%);
+    --surface: color-mix(in oklch, var(--shadow), var(--ghost) 7%);
+    --ink: var(--ghost);
+    --muted: color-mix(in oklch, var(--ghost), var(--shadow) 35%);
+    --line: color-mix(in oklch, var(--shadow), var(--ghost) 16%);
+    --accent: color-mix(in oklch, var(--baltic), var(--ghost) 28%);
     --accent-ink: var(--shadow);
     --danger: color-mix(in oklch, var(--oxblood), white 30%);
   }
