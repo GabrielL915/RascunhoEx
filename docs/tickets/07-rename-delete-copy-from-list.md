@@ -6,9 +6,9 @@
 
 **Status:** ready-for-agent
 
-- [ ] Group ganha `DELETE /diagrams/:id` (dono) com `Forbidden`/`DiagramNotFound`; repositório delete
-- [ ] `shared-ui` ganha Dialog, DropdownMenu e Toast (Base UI + CSS Modules)
+- [ ] `server/http/diagram` ganha `DELETE /api/diagrams/:id` (dono) com `Forbidden`/`DiagramNotFound`; repositório delete
+- [ ] `client/ui/shared` ganha Dialog, DropdownMenu e Toast (Base UI + CSS Modules)
 - [ ] Menu por item na lista com as três ações
-- [ ] Renomear usa o `PUT /diagrams/:id` só com título
+- [ ] Renomear usa o `PUT /api/diagrams/:id` só com título
 - [ ] Deletar exige confirmação; após sucesso o item some sem recarregar a página
 - [ ] Copiar link mostra Toast de sucesso

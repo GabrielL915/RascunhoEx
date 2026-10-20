@@ -6,8 +6,8 @@
 
 **Status:** ready-for-agent
 
-- [ ] `POST /diagrams` aceita cena inicial opcional e título
-- [ ] Schema `Scene` em `diagram-domain` valida o conteúdo do arquivo (formato excalidraw, elements, appState, files); erro `InvalidScene`
+- [ ] `POST /api/diagrams` aceita cena inicial opcional e título
+- [ ] Schema Zod de `Scene` em `server/http/diagram` valida o conteúdo do arquivo (formato excalidraw, elements, appState, files); erro `InvalidScene`
 - [ ] Botão de upload com file picker na lista (também no estado vazio)
 - [ ] Drag-and-drop na área da lista com feedback visual
 - [ ] Título = nome do arquivo sem extensão

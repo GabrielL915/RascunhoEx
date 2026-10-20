@@ -6,9 +6,9 @@
 
 **Status:** ready-for-agent
 
-- [ ] `GET /diagrams/:id` passa a aceitar requisição sem token; resposta inclui `isOwner` calculado pelo token enviado
-- [ ] `diagram-feature-view` renderiza Excalidraw em `viewModeEnabled`, sem toolbar de edição, com zoom e pan, título visível
+- [ ] `GET /api/diagrams/:id` passa a aceitar requisição sem token; resposta inclui `isOwner` calculado pelo token enviado
+- [ ] `client/features/diagram/view` renderiza Excalidraw em `viewModeEnabled`, sem toolbar de edição, com zoom e pan, título visível
 - [ ] Rota `/d/:id` decide entre editor e view pelo `isOwner`
 - [ ] Página "não encontrado" para `DiagramNotFound`
-- [ ] Botão "copiar link" no editor com feedback (Toast de `shared-ui`; criar aqui se o ticket 07 ainda não existir)
+- [ ] Botão "copiar link" no editor com feedback (Toast de `client/ui/shared`; criar aqui se o ticket 07 ainda não existir)
 - [ ] Visitante sem token no browser não recebe token novo ao abrir um link público

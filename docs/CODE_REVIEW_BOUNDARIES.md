@@ -24,7 +24,7 @@ prioridade = valor × (6 − risco) / esforço
 Duas travas que valem acima da fórmula:
 
 1. Nada que o pedido não citou e o spec não cobre entra no entregável. Se um exemplo no brief virar exigência, parar e perguntar. Um gráfico "de exemplo" não é um gráfico pedido.
-2. Mudança de contrato HTTP, schema do banco, ou fronteira entre pacotes é sempre risco 5, independente do tamanho do diff.
+2. Mudança de contrato HTTP, schema do banco, ou fronteira entre camadas é sempre risco 5, independente do tamanho do diff.
 
 ## Tickets, com as notas atuais
 
@@ -51,7 +51,7 @@ Mesma fórmula, com "valor" lido como "dano se não corrigir".
 | --- | --- | --- | --- |
 | Bug que corrompe dado ou expõe token | 5 | 1 a 2 | Corrige. |
 | Bug visível ao usuário | 4 | 1 a 2 | Corrige. |
-| Violação de fronteira entre pacotes | 4 | 2 | Corrige se é mover import. Propõe se exige novo pacote. |
+| Violação de fronteira entre camadas | 4 | 2 | Corrige se é mover import. Propõe se exige nova camada. |
 | Comentário no código, barrel file | 3 | 1 | Corrige. |
 | Simplificação de lógica | 2 | 2 | Sugere. |
 | Renomear por gosto, reordenar, estilo | 1 | 1 | Não menciona. |

@@ -89,38 +89,45 @@ atual. Pra usar em outro dispositivo, colo meu token (ou abro `/me/:token`).
 - Tema do Excalidraw segue o sistema. UI em pt-BR.
 
 ### Stack
-- Monorepo pnpm workspaces (sem Nx). Node 22, TypeScript strict.
-- ESLint 9 flat config + `eslint-plugin-boundaries` + Prettier. Sem framework de testes por enquanto.
-- Front: Vite + React 19, TanStack Router, Base UI (`@base-ui/react`) + CSS Modules, `@excalidraw/excalidraw`.
-- Effect no front só na camada de dados: `HttpApiClient` gerado do contrato, `Schema` pra validação, erros tipados. Estado de UI com hooks comuns.
-- Back: `@effect/platform` `HttpApi` servido por `@effect/platform-node`. Sem Fastify. Persistência com `@effect/sql-pg`. Postgres via docker-compose.
+- Monolito: um único `package.json`, sem workspaces. Node 22, TypeScript strict, pnpm.
+- Prettier formata tudo (`pnpm format`). ESLint 9 flat config com `eslint-plugin-boundaries` e `eslint-config-prettier` (desliga regras de estilo que conflitam com o Prettier). Formatação é só do Prettier; lint é só do ESLint. Sem framework de testes por enquanto.
+- Front (`src/client`): Vite + React 19, TanStack Router, Base UI (`@base-ui/react`) + CSS Modules, `@excalidraw/excalidraw`. Estado de UI com hooks comuns. Chamadas HTTP com axios: uma instância em `api/` com `baseURL: /api`, interceptor que injeta o `Authorization` e converte respostas de erro no union `_tag`; funções por recurso em cima dela.
+- Back (`src/server`): Hono servido por `@hono/node-server`. Validação de entrada com Zod, só no servidor. Persistência com Drizzle ORM (driver `postgres`) e migrations geradas pelo `drizzle-kit`, aplicadas no boot. Postgres via docker-compose.
+- Sem código compartilhado entre `src/client` e `src/server`. O front declara os tipos das respostas na mão e confia na API, porque os dois lados são nossos.
+- Erros tipados: union discriminada por `_tag` (`{ _tag: 'DiagramNotFound' }`). Funções que podem falhar retornam `Result<T, E>` (tipo próprio pequeno, `ok`/`err`); sem `throw` no domínio.
+- Dev: Vite em uma porta com proxy de `/api` pro Hono em outra; `pnpm dev` sobe os dois. Prod: Hono serve o build do Vite como estático e a API sob `/api`.
+- Dois tsconfigs: `tsconfig.client.json` (lib DOM) e `tsconfig.server.json` (lib Node), ambos estendendo um base.
 
-### Estrutura de pacotes
-- `apps/web` e `apps/api` mínimos: só compõem Layers e montam rotas.
-- Um pacote npm por camada, por domínio:
-  - `diagram-domain`, `diagram-http-access`, `diagram-data-source`, `diagram-resource`, `diagram-ui`, `diagram-feature-list`, `diagram-feature-editor`, `diagram-feature-view`, `diagram-feature-shell`.
-  - `account-domain`, `account-http-access`, `account-data-source`, `account-resource`, `account-ui`, `account-feature-token`, `account-feature-shell`.
-  - `shared-api` (compõe o `HttpApi` raiz a partir dos `HttpApiGroup` de cada domain), `shared-ui` (wrappers de Base UI com CSS Modules: Button, Dialog, DropdownMenu, Toast, Tooltip, Input), `shared-util-errors` (erros base com `Data.TaggedError`), `shared-util-data` (ids, datas).
-- Regras de dependência (travadas por lint):
-  - `domain` → só `shared-util-*`.
-  - `ui` → `shared-ui`, `shared-util-*`.
-  - `http-access` → `domain`, `shared-api`, `shared-util-*`.
-  - `feature-*` → `ui`, `http-access`, `domain`, `shared-*`.
-  - `data-source` → `domain`, `shared-util-*`.
-  - `resource` → `data-source`, `domain`, `shared-api`, `shared-util-*`.
-  - `apps/web` → `feature-*`; `apps/api` → `resource`, `shared-api`. Front nunca importa `data-source`/`resource`; back nunca importa `ui`/`feature`/`http-access`.
-- Camadas usam vocabulário Effect: `Service` (Context.Tag) + `Layer` (impl). Sem pastas `application/infrastructure/dtos`.
-- Convenção de módulos: cada módulo é uma pasta `Nome/index.ts(x)` com a implementação dentro. Nunca um `index.ts` que só re-exporta. Pacotes expõem `./*` via wildcard no `exports` apontando pra `src/*/index.ts`.
+### Estrutura de pastas
+- `src/server/` e `src/client/` são raízes independentes. Nunca se importam.
+- Server, uma pasta por camada, subpasta por domínio (`account`, `diagram`) quando fizer sentido:
+  - `domain/`: tipos, erros (`_tag`), regras puras. Não importa nada interno.
+  - `db/`: schema Drizzle, migrations, repositórios (funções que recebem o client do Drizzle). Importa só `domain`.
+  - `http/`: schemas Zod, middleware de auth, rotas Hono por recurso. Importa `domain` e `db`.
+  - `main.ts`: lê env, conecta no banco, roda migrations, monta o app Hono, serve.
+- Client, uma pasta por camada:
+  - `api/`: instância axios, funções por recurso, tipos de resposta declarados à mão, erros da API (`_tag`). Não importa nada interno.
+  - `ui/`: componentes puros. `ui/shared/` com wrappers de Base UI + CSS Modules (Button, Dialog, DropdownMenu, Toast, Tooltip, Input); `ui/diagram/` com card de diagrama etc. Importa só `ui/shared`.
+  - `features/`: telas e fluxos (`diagram/list`, `diagram/editor`, `diagram/view`, `account/token`). Importa `ui` e `api`.
+  - `routes/`: árvore do TanStack Router. Importa só `features`.
+  - `main.tsx`: monta o router.
+- Regras de dependência (travadas por `eslint-plugin-boundaries`):
+  - server: `domain` → nada; `db` → `domain`; `http` → `domain`, `db`; `main.ts` → tudo do server.
+  - client: `api` → nada; `ui` → `ui/shared`; `features` → `ui`, `api`; `routes` → `features`; `main.tsx` → `routes`.
+  - `client/**` nunca importa `server/**` e vice-versa.
+- Dependências explícitas: módulos que precisam de banco ou de config recebem como parâmetro (função fábrica ou argumento). Sem container de DI, sem singleton global. `main.ts` é o único lugar que compõe tudo.
+- Convenção de módulos: cada módulo é uma pasta `Nome/index.ts(x)` com a implementação dentro. Nunca um `index.ts` que só re-exporta.
 
-### Contrato HTTP (HttpApi)
+### Contrato HTTP
+- Prefixo `/api`.
 - `POST /owners` → cria owner, retorna o token (única vez que o token trafega em resposta).
 - `GET /diagrams` (auth) → lista do dono: id, título, thumbnail, updatedAt.
 - `POST /diagrams` (auth) → cria (em branco ou a partir de cena enviada no upload).
 - `GET /diagrams/:id` (auth opcional) → cena completa + título + flag `isOwner`.
 - `PUT /diagrams/:id` (auth, dono) → atualiza cena, título, thumbnail.
 - `DELETE /diagrams/:id` (auth, dono) → remove.
-- Erros tipados: `DiagramNotFound`, `Forbidden`, `Unauthorized`, `PayloadTooLarge`, `InvalidScene`.
-- Limite de corpo: 5 MB.
+- Erros tipados no corpo da resposta como `{ _tag: 'DiagramNotFound' }` etc.: `DiagramNotFound` (404), `Forbidden` (403), `Unauthorized` (401), `PayloadTooLarge` (413), `InvalidScene` (422).
+- Limite de corpo: 5 MB, via middleware `bodyLimit` do Hono.
 
 ### Schema do banco
 - `owner`: id, token_hash (único), created_at.
@@ -136,8 +143,8 @@ atual. Pra usar em outro dispositivo, colo meu token (ou abro `/me/:token`).
 ## Testing Decisions
 
 - Decisão explícita: **sem testes nesta fase**. O que segue é o desenho das costuras para quando entrarem.
-- Costura única preferida: o contrato `HttpApi` em `shared-api`. Do lado do servidor, testes sobem a API com um `Layer` de banco (Postgres de teste) e exercitam as rotas via `HttpApiClient`. Do lado do front, features recebem um `Layer` do client com respostas controladas. Nenhuma camada interna precisa ser mockada.
-- Um bom teste exercita comportamento externo (request → response, ação do usuário → estado da tela), nunca detalhes de implementação (nomes de Services, SQL).
+- Costura única preferida: a borda HTTP. Do lado do servidor, testes montam o app Hono com um client Drizzle apontando pra um Postgres de teste e exercitam as rotas com `app.request()`. Do lado do front, features recebem as funções de `api/` como parâmetro e testes passam versões com respostas controladas. Nenhuma camada interna precisa ser mockada.
+- Um bom teste exercita comportamento externo (request → response, ação do usuário → estado da tela), nunca detalhes de implementação (nomes de funções internas, SQL).
 - Sem prior art no repo (projeto novo).
 
 ## Out of Scope

@@ -6,13 +6,13 @@
 
 **Status:** ready-for-agent
 
-- [ ] Group ganha `GET /diagrams/:id` (auth obrigatório por ora) e `PUT /diagrams/:id` (dono) com erros `DiagramNotFound` e `Forbidden`
+- [ ] `server/http/diagram` ganha `GET /api/diagrams/:id` (auth obrigatório por ora) e `PUT /api/diagrams/:id` (dono) com erros `DiagramNotFound` e `Forbidden`
 - [ ] Repositório: findById, update (scene, title); `updated_at` atualizado no update
-- [ ] `diagram-http-access` expõe get e update
-- [ ] `diagram-feature-editor` monta `@excalidraw/excalidraw` com a cena carregada, `langCode` pt-BR e `theme` seguindo `prefers-color-scheme`
+- [ ] `client/api/diagram` expõe get e update
+- [ ] `client/features/diagram/editor` monta `@excalidraw/excalidraw` com a cena carregada, `langCode` pt-BR e `theme` seguindo `prefers-color-scheme`
 - [ ] Autosave com debounce após a última mudança; não salva se a versão dos elementos não mudou
 - [ ] appState persistido limitado a viewBackgroundColor, scrollX, scrollY, zoom, gridSize
 - [ ] Arquivos (imagens) da cena persistidos inline em `scene.files`
 - [ ] Indicador de estado do save visível no editor
 - [ ] Título editável inline, salvo no mesmo fluxo
-- [ ] Rota `/d/:id` registrada no `diagram-feature-shell`
+- [ ] Rota `/d/:id` registrada em `client/routes`

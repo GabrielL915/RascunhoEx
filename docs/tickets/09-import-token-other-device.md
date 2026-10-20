@@ -6,8 +6,8 @@
 
 **Status:** ready-for-agent
 
-- [ ] Rota `/me/:token` registrada no `account-feature-shell`: valida o token contra o servidor, guarda no browser e redireciona pra `/`
+- [ ] Rota `/me/:token` registrada em `client/routes`: valida o token contra o servidor, guarda no browser e redireciona pra `/`
 - [ ] Token inválido mostra erro e mantém a identidade anterior
 - [ ] Tela de configurações ganha campo "colar token" com o mesmo fluxo
 - [ ] Configurações mostra também um link `/me/:token` pronto pra copiar
-- [ ] Endpoint de validação (ex.: `GET /owners/me`) devolve 200 pro token válido e `Unauthorized` caso contrário
+- [ ] Endpoint de validação (ex.: `GET /api/owners/me`) devolve 200 pro token válido e `Unauthorized` caso contrário

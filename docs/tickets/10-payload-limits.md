@@ -6,7 +6,7 @@
 
 **Status:** ready-for-agent
 
-- [ ] Servidor rejeita corpo acima de 5 MB com erro tipado `PayloadTooLarge` no contrato
+- [ ] Servidor rejeita corpo acima de 5 MB via `bodyLimit` do Hono respondendo `{ _tag: 'PayloadTooLarge' }` com 413
 - [ ] Editor mostra estado "erro: diagrama acima do limite" no indicador de save e não entra em loop de retry
 - [ ] Upload checa o tamanho no cliente antes de enviar e mostra erro em pt-BR
 - [ ] Erros `InvalidScene` e `PayloadTooLarge` tratados de forma distinta na UI
