@@ -6,10 +6,11 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 const layers = {
+  'server-config': [],
   'server-domain': [],
   'server-db': ['server-domain'],
   'server-http': ['server-domain', 'server-db'],
-  'server-main': ['server-domain', 'server-db', 'server-http'],
+  'server-main': ['server-config', 'server-domain', 'server-db', 'server-http'],
   'client-api': [],
   'client-ui-shared': [],
   'client-ui': ['client-ui-shared'],
@@ -52,6 +53,7 @@ export default tseslint.config(
       'import/resolver': { node: { extensions: ['.js', '.ts', '.tsx'] } },
       'boundaries/include': ['src/**/*'],
       'boundaries/elements': [
+        { type: 'server-config', pattern: 'src/server/config' },
         { type: 'server-domain', pattern: 'src/server/domain/*' },
         { type: 'server-db', pattern: 'src/server/db/*' },
         { type: 'server-http', pattern: 'src/server/http/*' },
