@@ -1,0 +1,8 @@
+node_modules
+dist
+pnpm-lock.yaml
+src/client/routes/routeTree.gen.ts
+src/server/db/migrations
+prototypes
+.claude
+docs

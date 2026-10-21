@@ -2,6 +2,19 @@
 
 Salve seus diagramas Excalidraw e compartilhe por link, sem conta.
 
+## Como rodar
+
+Precisa de Node 22, pnpm e Docker.
+
+```sh
+pnpm install
+cp .env.example .env
+pnpm db:up      # sobe o Postgres local
+pnpm dev        # Hono em :3000 e Vite em :5173 (proxy de /api)
+```
+
+Outros scripts: `pnpm build` (front pra `dist/client`), `pnpm start` (serve o build e a API em produção), `pnpm lint`, `pnpm format`, `pnpm typecheck`, `pnpm db:generate` (migrations do Drizzle).
+
 ## Documentos
 
 - [docs/SPEC.md](docs/SPEC.md): o que o produto faz, decisões de implementação, contrato HTTP, schema do banco, fora de escopo.

@@ -1,0 +1,36 @@
+:root {
+  --shadow: oklch(24% 0.011 285);
+  --oxblood: oklch(42% 0.161 29);
+  --baltic: oklch(46% 0.093 250);
+  --ghost: oklch(97.5% 0.009 290);
+  --bg: var(--ghost);
+  --surface: color-mix(in oklch, var(--ghost), white 60%);
+  --ink: var(--shadow);
+  --muted: color-mix(in oklch, var(--shadow), var(--ghost) 45%);
+  --line: color-mix(in oklch, var(--ghost), var(--shadow) 14%);
+  --accent: var(--baltic);
+  --accent-ink: var(--ghost);
+  --danger: var(--oxblood);
+  --ok: oklch(60% 0.17 150);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font:
+    15px/1.45 system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}

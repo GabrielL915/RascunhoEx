@@ -1,0 +1,20 @@
+.page {
+  min-block-size: 100dvh;
+  display: grid;
+  place-content: center;
+  gap: 0.5rem;
+  padding-inline: 1rem;
+  text-align: center;
+}
+
+.status {
+  color: var(--muted);
+}
+
+.status[data-status='ok'] {
+  color: var(--ok);
+}
+
+.status[data-status='unreachable'] {
+  color: var(--danger);
+}
